@@ -1,0 +1,163 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --animate-shimmer: shimmer 2s infinite;
+  --animate-spin-slow: spin 3s linear infinite;
+  @keyframes shimmer {
+    100% { transform: translateX(100%); }
+  }
+
+  /* Blood Donation Theme - Primary Red (Crimson/Ruby) */
+  --color-red-50: #fff0f2;
+  --color-red-100: #ffe1e5;
+  --color-red-200: #ffc8d0;
+  --color-red-300: #ffa0af;
+  --color-red-400: #ff6a82;
+  --color-red-500: #f83b58;
+  --color-red-600: #e51d3d;
+  --color-red-700: #c0102b;
+  --color-red-800: #a01127;
+  --color-red-900: #861325;
+  --color-red-950: #4b0510;
+
+  /* Deep Navy/Grey for contrast (overriding slate) */
+  --color-slate-50: #f5f7fa;
+  --color-slate-100: #eaeff4;
+  --color-slate-200: #d5dfe9;
+  --color-slate-300: #b4c6d8;
+  --color-slate-400: #8da6c1;
+  --color-slate-500: #6e88a8;
+  --color-slate-600: #576d8d;
+  --color-slate-700: #465873;
+  --color-slate-800: #3c4a60;
+  --color-slate-900: #2a3441;
+  --color-slate-950: #161b22;
+
+  /* Royal Blue for accents */
+  --color-blue-50: #f0f4fc;
+  --color-blue-100: #e3ebfa;
+  --color-blue-200: #cddbf5;
+  --color-blue-300: #abc2ee;
+  --color-blue-400: #82a0e4;
+  --color-blue-500: #627ee0;
+  --color-blue-600: #4b60d3;
+  --color-blue-700: #3e4cbf;
+  --color-blue-800: #343f9a;
+  --color-blue-900: #2e377b;
+  --color-blue-950: #1c204b;
+}
+
+@layer components {
+  .responsive-container {
+    @apply px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto;
+  }
+}
+
+/* Custom Leaflet Popup Styles */
+.custom-popup .leaflet-popup-content-wrapper {
+  padding: 0;
+  overflow: hidden;
+  border-radius: 1rem;
+}
+
+.custom-popup .leaflet-popup-content {
+  margin: 0;
+  width: auto !important;
+}
+
+/* Custom Map Marker Styles */
+.custom-map-marker {
+  background: none !important;
+  border: none !important;
+}
+
+.marker-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.2));
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.marker-container:hover {
+  transform: scale(1.1) translateY(-8px);
+  z-index: 1000;
+}
+
+.marker-pin {
+  width: 100%;
+  height: 100%;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 2;
+}
+
+.marker-icon {
+  transform: rotate(45deg);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.marker-pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  z-index: 1;
+  animation: marker-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+}
+
+@keyframes marker-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+#root {
+  transition: border-radius 0.3s ease;
+}
+
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 20px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #94a3b8;
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .hide-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
