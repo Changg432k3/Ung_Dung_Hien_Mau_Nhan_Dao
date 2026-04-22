@@ -1,0 +1,20 @@
+src/components/ui/Accordion.tsx:          key={index}
+src/components/DonorMapSection.tsx:                key={donor.id} 
+src/components/ChatAssistant.tsx:                  key={msg.id} 
+src/components/LuckyWheel.tsx:                key={prize.name}
+src/components/BannerCarousel.tsx:          key={currentIndex}
+src/components/BannerCarousel.tsx:            key={slide.id}
+src/components/PublicLayout.tsx:              key={link.path} 
+src/components/PublicLayout.tsx:                  key={link.path} 
+src/components/PublicLayout.tsx:            key={location.pathname}
+src/components/MiniQuizWidget.tsx:                    key={option}
+src/components/Layout.tsx:                key={link.path}
+src/components/Layout.tsx:                key={location.pathname}
+src/components/BadgePopup.tsx:          key="badge-popup-overlay"
+src/components/BadgePopup.tsx:            key={activeBadge.id}
+src/components/NotificationCenter.tsx:                  key={notification.id}
+src/components/MiniGameTab.tsx:                  key={badge.id} 
+src/components/MiniGameTab.tsx:              <div key={user.id} className="flex items-center justify-between group">
+src/components/EventMap.tsx:          key={event.id} 
+src/components/ChallengesSection.tsx:              key={challenge.id}
+src/components/LocationPicker.tsx:                key={result.place_id || index}

@@ -1,0 +1,235 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: locations
+    // Document ID: auto-generated
+    // Fields:
+    //   - name: string (required)
+    //   - address: string (required)
+    //   - lat: number (required)
+    //   - lng: number (required)
+    //   - contactInfo: string (optional)
+    //   - type: string (required, 'hospital' | 'center' | 'mobile')
+    //   - imageUrl: string (optional)
+    //   - createdAt: timestamp (required)
+    //
+    // Collection: firebaseEvents
+    // Document ID: auto-generated
+    // Fields:
+    //   - title: string (required)
+    //   - locationId: string (required)
+    //   - startDate: string (required)
+    //   - endDate: string (required)
+    //   - time: string (required)
+    //   - description: string (optional)
+    //   - status: string (required, 'upcoming' | 'ongoing' | 'completed')
+    //   - target: number (optional)
+    //   - registered: number (optional)
+    //   - createdAt: timestamp (required)
+    //
+    // ===============================================================
+    
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+    
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    function isAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "tranhatrangnguyen@gmail.com" || request.auth.token.email == "trangtoony2003@gmail.com" ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin')); // Default admin
+    }
+    
+    function isStaffOrAdmin() {
+      return isAuthenticated() &&
+        (request.auth.token.email == "tranhatrangnguyen@gmail.com" || request.auth.token.email == "trangtoony2003@gmail.com" ||
+          (exists(/databases/$(database)/documents/users/$(request.auth.uid)) && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['admin', 'staff', 'organizer']));
+    }
+
+    function isValidUser(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.email is string && data.email.size() > 0 &&
+             data.role in ['donor', 'admin'] &&
+             (!('bloodGroup' in data) || data.bloodGroup is string) &&
+             (!('points' in data) || data.points is number) &&
+             (!('donationsCount' in data) || data.donationsCount is number);
+    }
+    
+    function hasRequiredFields(fields) {
+      return request.resource.data.keys().hasAll(fields);
+    }
+    
+    function isValidLocation(data) {
+      return data.name is string && data.name.size() > 0 && data.name.size() <= 100 &&
+             data.address is string && data.address.size() > 0 && data.address.size() <= 200 &&
+             data.lat is number && data.lng is number &&
+             data.type in ['hospital', 'center', 'mobile'] &&
+             (!('contactInfo' in data) || (data.contactInfo is string && data.contactInfo.size() <= 100)) &&
+             (!('imageUrl' in data) || (data.imageUrl is string && data.imageUrl.size() <= 500)) &&
+             (!('region' in data) || (data.region is string && data.region.size() <= 100));
+    }
+    
+    function isValidEvent(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 150 &&
+             (('locationId' in data && data.locationId is string) || ('location' in data && data.location is string)) &&
+             data.startDate is string && data.endDate is string &&
+             data.time is string && data.time.size() <= 50 &&
+             data.status in ['upcoming', 'ongoing', 'completed'] &&
+             (!('description' in data) || (data.description is string && data.description.size() <= 2000)) &&
+             (!('target' in data) || data.target is number) &&
+             (!('registered' in data) || data.registered is number);
+    }
+    
+    function isValidRegistration(data) {
+      return data.eventId is string && data.eventId.size() > 0 &&
+             data.userId is string && data.userId.size() > 0 &&
+             (!('userName' in data) || (data.userName is string && data.userName.size() <= 100)) &&
+             (!('userEmail' in data) || (data.userEmail is string && data.userEmail.size() <= 100)) &&
+             (!('bloodGroup' in data) || (data.bloodGroup is string && data.bloodGroup.size() <= 10)) &&
+             data.status in ['registered', 'checked-in', 'completed', 'cancelled'] &&
+             data.registeredAt is string &&
+             (!('date' in data) || data.date is string) &&
+             (!('amount' in data) || data.amount is number) &&
+             (!('expectedAmount' in data) || data.expectedAmount is number) &&
+             (!('giftReceived' in data) || data.giftReceived is bool) &&
+             (!('giftType' in data) || data.giftType is string) &&
+             (!('giftReceivedDate' in data) || data.giftReceivedDate is string);
+    }
+    
+    function isValidCounterUpdate(eventId) {
+      let oldRegistered = resource.data.get('registered', 0);
+      let newRegistered = request.resource.data.get('registered', 0);
+      let regDocPath = /databases/$(database)/documents/registrations/$(request.auth.uid + '_' + eventId);
+      
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['registered']) &&
+             math.abs(newRegistered - oldRegistered) == 1 &&
+             (
+               (newRegistered > oldRegistered &&
+                (!exists(regDocPath) || get(regDocPath).data.status == 'cancelled') &&
+                getAfter(regDocPath).data.status == 'registered') ||
+               (newRegistered < oldRegistered &&
+                exists(regDocPath) && get(regDocPath).data.status == 'registered' &&
+                getAfter(regDocPath).data.status == 'cancelled')
+             );
+    }
+    
+    function isValidPost(data) {
+      return data.title is string && data.title.size() > 0 && data.title.size() <= 200 &&
+             data.coverImage is string && data.coverImage.size() <= 500 &&
+             data.content is string && data.content.size() <= 10000 &&
+             data.category in ['news', 'health', 'urgent', 'stories'] &&
+             data.status in ['published', 'draft'] &&
+             data.publishDate is string &&
+             data.isFeatured is bool &&
+             data.viewCount is number &&
+             data.clickCount is number &&
+             data.authorId is string &&
+             data.createdAt is string;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+    
+    match /posts/{postId} {
+      allow read: if resource.data.status == 'published' || isAdmin();
+      allow create: if isAdmin() && isValidPost(request.resource.data);
+      allow update: if isAdmin() && isValidPost(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    match /certificateTemplates/{templateId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isStaffOrAdmin();
+      allow update: if isStaffOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /badges/{badgeId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isStaffOrAdmin();
+      allow update: if isStaffOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /certificates/{certificateId} {
+      allow get: if isAuthenticated() && (request.auth.uid == resource.data.userId || isStaffOrAdmin());
+      allow list: if isAuthenticated();
+      allow create: if isStaffOrAdmin();
+      allow update: if isStaffOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /rewards/{rewardId} {
+      allow get: if true;
+      allow list: if true;
+      allow create: if isStaffOrAdmin();
+      allow update: if isStaffOrAdmin();
+      allow delete: if isAdmin();
+    }
+
+    match /notifications/{notificationId} {
+      allow get: if isAuthenticated() && (request.auth.uid == resource.data.userId || isStaffOrAdmin());
+      allow list: if isAuthenticated();
+      allow create: if isAuthenticated();
+      allow update: if isAuthenticated() && request.auth.uid == resource.data.userId;
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.userId;
+    }
+
+    match /locations/{locationId} {
+      // Anyone can read locations to see them on the map
+      allow read: if true;
+      allow create: if isStaffOrAdmin() && hasRequiredFields(['name', 'address', 'lat', 'lng', 'type']) && isValidLocation(request.resource.data);
+      allow update: if isStaffOrAdmin() && isValidLocation(request.resource.data);
+      allow delete: if isAdmin();
+    }
+    
+    match /events/{eventId} {
+      // Anyone can read events
+      allow read: if true;
+      allow create: if isStaffOrAdmin() && hasRequiredFields(['title', 'startDate', 'endDate', 'time', 'status']) && isValidEvent(request.resource.data);
+      allow update: if (isStaffOrAdmin() && isValidEvent(request.resource.data)) || (isAuthenticated() && isValidCounterUpdate(eventId));
+      allow delete: if isAdmin();
+    }
+
+    match /registrations/{registrationId} {
+      allow read: if isAuthenticated() && (request.auth.uid == resource.data.userId || isStaffOrAdmin());
+      allow list: if isAuthenticated();
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId && hasRequiredFields(['eventId', 'userId', 'status', 'registeredAt']) && isValidRegistration(request.resource.data) && get(/databases/$(database)/documents/events/$(request.resource.data.eventId)).data.status in ['upcoming', 'ongoing'] && !exists(/databases/$(database)/documents/registrations/$(request.auth.uid + '_' + request.resource.data.eventId));
+      allow update: if (isStaffOrAdmin() && isValidRegistration(request.resource.data)) || 
+                       (isAuthenticated() && request.auth.uid == resource.data.userId && 
+                        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['status', 'registeredAt', 'expectedAmount', 'userName', 'userEmail', 'bloodGroup', 'date']) && 
+                        ((request.resource.data.status == 'cancelled' && resource.data.status == 'registered') ||
+                         (request.resource.data.status == 'registered' && resource.data.status == 'cancelled')));
+      allow delete: if isAdmin();
+    }
+
+    match /loginLogs/{logId} {
+      allow read: if isAdmin();
+      allow create: if isAuthenticated() && request.auth.uid == request.resource.data.userId;
+      allow update: if false;
+      allow delete: if isAdmin();
+    }
+
+    match /users {
+      allow list: if isAuthenticated();
+    }
+    
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isStaffOrAdmin());
+      allow create: if isAuthenticated() && request.auth.uid == userId && isValidUser(request.resource.data);
+      allow update: if isAuthenticated() && (request.auth.uid == userId || isStaffOrAdmin()) && isValidUser(request.resource.data);
+      allow delete: if isAdmin();
+    }
+  }
+}

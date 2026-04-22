@@ -1,0 +1,219 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "Blood donor information.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["donor", "admin", "staff", "organizer"] },
+        "bloodGroup": { "type": "string" },
+        "phone": { "type": "string" },
+        "address": { "type": "string" },
+        "points": { "type": "number" },
+        "donationsCount": { "type": "number" },
+        "lastDonationDate": { "type": "string", "format": "date-time" },
+        "avatar": { "type": "string" },
+        "isLocked": { "type": "boolean" },
+        "medicalInfo": { "type": "string" },
+        "birthDate": { "type": "string" },
+        "gender": { "type": "string", "enum": ["male", "female", "other"] }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "Location": {
+      "title": "Location",
+      "description": "A blood donation location (hospital, center, or mobile site).",
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Name of the location"
+        },
+        "address": {
+          "type": "string",
+          "description": "Detailed address"
+        },
+        "lat": {
+          "type": "number",
+          "description": "Latitude"
+        },
+        "lng": {
+          "type": "number",
+          "description": "Longitude"
+        },
+        "contactInfo": {
+          "type": "string",
+          "description": "Phone number or email"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["hospital", "center", "mobile"],
+          "description": "Type of location"
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "Image URL of the location"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["name", "address", "lat", "lng", "type"]
+    },
+    "FirebaseEvent": {
+      "title": "FirebaseEvent",
+      "description": "A blood donation event scheduled at a location.",
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "locationId": {
+          "type": "string",
+          "description": "Reference to a Location document"
+        },
+        "startDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "time": {
+          "type": "string"
+        },
+        "description": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["upcoming", "ongoing", "completed"]
+        },
+        "target": {
+          "type": "number"
+        },
+        "registered": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["title", "locationId", "startDate", "endDate", "time", "status"]
+    },
+    "Registration": {
+      "title": "Registration",
+      "description": "A user's registration and donation history for a blood donation event.",
+      "type": "object",
+      "properties": {
+        "eventId": {
+          "type": "string",
+          "description": "Reference to a FirebaseEvent document"
+        },
+        "userId": {
+          "type": "string",
+          "description": "ID of the user who registered"
+        },
+        "userName": {
+          "type": "string"
+        },
+        "userEmail": {
+          "type": "string"
+        },
+        "bloodGroup": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": ["registered", "checked-in", "completed", "cancelled"]
+        },
+        "registeredAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "date": {
+          "type": "string",
+          "description": "Date of the event or donation"
+        },
+        "amount": {
+          "type": "number",
+          "description": "Actual amount donated in ml"
+        },
+        "expectedAmount": {
+          "type": "number",
+          "description": "Expected amount to donate in ml"
+        },
+        "giftReceived": {
+          "type": "boolean"
+        },
+        "giftType": {
+          "type": "string"
+        },
+        "giftReceivedDate": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["eventId", "userId", "status", "registeredAt"]
+    },
+    "LoginLog": {
+      "title": "LoginLog",
+      "description": "A log of user login events.",
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "description": "ID of the user who logged in"
+        },
+        "loginAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "ipAddress": {
+          "type": "string"
+        },
+        "userAgent": {
+          "type": "string"
+        }
+      },
+      "required": ["userId", "loginAt"]
+    }
+  },
+  "firestore": {
+    "users": {
+      "schema": {
+        "$ref": "#/entities/User"
+      },
+      "description": "Stores blood donor information."
+    },
+    "locations": {
+      "schema": {
+        "$ref": "#/entities/Location"
+      },
+      "description": "Stores blood donation locations."
+    },
+    "events": {
+      "schema": {
+        "$ref": "#/entities/FirebaseEvent"
+      },
+      "description": "Stores blood donation events linked to locations."
+    },
+    "registrations": {
+      "schema": {
+        "$ref": "#/entities/Registration"
+      },
+      "description": "Stores user registrations and donation history for events."
+    },
+    "loginLogs": {
+      "schema": {
+        "$ref": "#/entities/LoginLog"
+      },
+      "description": "Stores user login events."
+    }
+  }
+}

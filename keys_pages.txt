@@ -1,0 +1,170 @@
+src/pages/Rewards.tsx:            key="available"
+src/pages/Rewards.tsx:                  key={reward.id}
+src/pages/Rewards.tsx:            key="redeemed"
+src/pages/Rewards.tsx:                      <Card key={rr.id} className="overflow-hidden flex flex-col sm:flex-row shadow-sm border-l-4 border-l-emerald-500">
+src/pages/Rewards.tsx:            key="event-gifts"
+src/pages/Rewards.tsx:                    <Card key={gift.id} className="overflow-hidden flex flex-col sm:flex-row shadow-sm border-l-4 border-l-red-500">
+src/pages/admin/MapEvents.tsx:                <option key={`province-${p}`} value={p}>{p}</option>
+src/pages/admin/MapEvents.tsx:              key={`${point.mapType}-${point.id}`} 
+src/pages/admin/EventDetails.tsx:                  key={tab.id}
+src/pages/admin/EventDetails.tsx:                key="info"
+src/pages/admin/EventDetails.tsx:                                  <label key={`${bg}-event-details`} className={`flex items-center gap-2 cursor-pointer px-3 py-2 rounded-lg border transition-colors ${isSelected ? 'bg-red-50 border-red-200' : 'bg-slate-50 border-slate-200 hover:bg-slate-100'}`}>
+src/pages/admin/EventDetails.tsx:                              <option key={province} value={province}>{province}</option>
+src/pages/admin/EventDetails.tsx:                              <option key={loc.id} value={loc.id}>{loc.name}</option>
+src/pages/admin/EventDetails.tsx:                key="schedule"
+src/pages/admin/EventDetails.tsx:                          <div key={item.id} className="relative flex items-start gap-4 md:gap-8 group">
+src/pages/admin/EventDetails.tsx:                key="stats"
+src/pages/admin/EventDetails.tsx:                            <div key={stat.group} className="flex items-center gap-6">
+src/pages/admin/Badges.tsx:                <div key={badge.id} className={`bg-white rounded-2xl border ${levelData.borderClass} shadow-sm overflow-hidden flex flex-col`}>
+src/pages/admin/Badges.tsx:                <div key={gift.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group">
+src/pages/admin/Badges.tsx:                        <tr key={redemption.id} className="hover:bg-slate-50 transition-colors">
+src/pages/admin/Badges.tsx:                      <div key={badge.id} className="space-y-1">
+src/pages/admin/Badges.tsx:                      <div key={reward.id} className="space-y-1">
+src/pages/admin/Badges.tsx:                          key={lvl.id}
+src/pages/admin/Badges.tsx:                            key={iconName}
+src/pages/admin/Badges.tsx:                    <div key={user.id} className="flex items-center gap-4 p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
+src/pages/admin/Reports.tsx:                <option key={region} value={region}>{region}</option>
+src/pages/admin/Reports.tsx:                <option key={event.id} value={event.id}>{event.title}</option>
+src/pages/admin/Reports.tsx:            key={stat.id}
+src/pages/admin/Reports.tsx:                      <Cell key={`cell-blood-${index}`} fill={entry.color} />
+src/pages/admin/Reports.tsx:                <div key={item.name} className="flex items-center gap-3">
+src/pages/admin/Reports.tsx:                      <Cell key={`cell-gender-${index}`} fill={entry.color} />
+src/pages/admin/Reports.tsx:                <div key={item.name} className="flex items-center gap-3">
+src/pages/admin/Reports.tsx:                      <Cell key={`cell-event-${index}`} fill={entry.color} />
+src/pages/admin/Reports.tsx:                <div key={item.name} className="flex items-center gap-3">
+src/pages/admin/Reports.tsx:                          <th key={key} className="pb-4 font-semibold text-slate-600 text-sm uppercase tracking-wider">
+src/pages/admin/Reports.tsx:                        <tr key={`row-${i}`} className="hover:bg-slate-50/50 transition-colors">
+src/pages/admin/Reports.tsx:                            <td key={`${i}-${key}`} className="py-4 text-slate-700 text-sm">
+src/pages/admin/Donors.tsx:              <option key={`blood-filter-${bg}`} value={bg}>{bg}</option>
+src/pages/admin/Donors.tsx:                    key={user.id}
+src/pages/admin/Donors.tsx:                          <option key={`blood-edit-${bg}`} value={bg}>{bg}</option>
+src/pages/admin/Donors.tsx:                          <div key={record.id} className="p-3 bg-white border border-slate-100 rounded-xl shadow-sm">
+src/pages/admin/Donors.tsx:                        <Droplets key={i} className="w-4 h-4 text-red-500 fill-red-500" />
+src/pages/admin/Participants.tsx:                    <tr key={p.id} className={`hover:bg-slate-50 transition-colors ${hasDuplicate ? 'bg-orange-50/50' : ''}`}>
+src/pages/admin/Participants.tsx:                      <div key={category} className="space-y-2">
+src/pages/admin/Participants.tsx:                              <label key={`${gift.id}-${category}`} className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all ${isSelected ? 'border-red-500 bg-red-50 ring-1 ring-red-500' : 'border-slate-200 hover:bg-slate-50'}`}>
+src/pages/admin/Locations.tsx:    script.src = `https://maps.googleapis.com/maps/api/js?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&libraries=places`;
+src/pages/admin/Locations.tsx:            <div key={loc.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+src/pages/admin/Locations.tsx:                      <option key={province} value={province}>{province}</option>
+src/pages/admin/Leaderboard.tsx:                    <tr key={donor.id} className="hover:bg-slate-50/50 transition-colors group bg-white">
+src/pages/admin/Roles.tsx:                  key={role}
+src/pages/admin/Roles.tsx:                      <tr key={user.id} className="hover:bg-slate-50 transition-colors">
+src/pages/admin/Roles.tsx:                              <option key={role} value={role}>{ROLE_NAMES[role]}</option>
+src/pages/admin/Roles.tsx:              <div key={role} className="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
+src/pages/admin/Roles.tsx:                        <span key={perm} className="inline-flex items-center px-2.5 py-1.5 rounded-lg bg-slate-50 border border-slate-200 text-slate-700 text-xs font-medium">
+src/pages/admin/Roles.tsx:                    <React.Fragment key={module.id}>
+src/pages/admin/Roles.tsx:                          <tr key={permString} className="hover:bg-slate-50/80 transition-colors">
+src/pages/admin/Roles.tsx:                                <td key={role} className="px-6 py-3 text-center border-r border-slate-200 last:border-0">
+src/pages/admin/Certificates.tsx:              key={template.id}
+src/pages/admin/Certificates.tsx:                        <tr key={cert.id} className={`hover:bg-slate-50 transition-colors ${cert.status === 'revoked' ? 'opacity-60 bg-slate-50' : ''}`}>
+src/pages/admin/Certificates.tsx:                        <tr key={month} className="hover:bg-slate-50 transition-colors">
+src/pages/admin/Certificates.tsx:                        <tr key={location} className="hover:bg-slate-50 transition-colors">
+src/pages/admin/Certificates.tsx:                    <tr key={template.id} className="hover:bg-slate-50 transition-colors">
+src/pages/admin/Certificates.tsx:                          <option key={event.id} value={event.id}>{event.title}</option>
+src/pages/admin/Events.tsx:            {VIETNAM_PROVINCES.map(r => <option key={`province-${r}`} value={r}>{r}</option>)}
+src/pages/admin/Events.tsx:              <option key={loc.id} value={loc.id}>{loc.name}</option>
+src/pages/admin/Events.tsx:            key="table"
+src/pages/admin/Events.tsx:                    <tr key={event.id} className="bg-white hover:bg-slate-50/80 transition-colors cursor-pointer group" onClick={() => navigate(`/admin/events/${event.id}`)}>
+src/pages/admin/Events.tsx:            key="grid"
+src/pages/admin/Events.tsx:                key={event.id} 
+src/pages/admin/Users.tsx:                  key={user.id}
+src/pages/admin/Security.tsx:                <div key={session.id} className="p-4 flex items-start gap-3">
+src/pages/admin/Security.tsx:                  <div key={item.time} className="p-4 rounded-xl border border-slate-100 bg-slate-50 space-y-2">
+src/pages/admin/Inventory.tsx:                    key={item.group}
+src/pages/admin/Dashboard.tsx:                <option key={`region-filter-${p}`} value={p}>{p}</option>
+src/pages/admin/Dashboard.tsx:            key={stat.type}
+src/pages/admin/Dashboard.tsx:                  <div key={alert.id} className={`flex items-start gap-4 p-4 rounded-xl border ${alert.type === 'error' ? 'bg-red-50 border-red-100' : 'bg-amber-50 border-amber-100'}`}>
+src/pages/admin/Dashboard.tsx:                              key={`${alert.id}-${action.label}`} 
+src/pages/admin/Dashboard.tsx:                  key={event.id} 
+src/pages/admin/Dashboard.tsx:                <div key={donor.id} className="flex items-center gap-3 p-2 rounded-xl hover:bg-slate-50 transition-colors">
+src/pages/admin/Dashboard.tsx:                      <Cell key={`cell-dashboard-blood-${index}`} fill={entry.color} />
+src/pages/admin/Dashboard.tsx:                <div key={type.name} className="flex items-center gap-2">
+src/pages/admin/Dashboard.tsx:                          <tr key={user.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+src/pages/admin/Dashboard.tsx:                        <tr key={event.id} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+src/pages/admin/Dashboard.tsx:                            <tr key={`record-list-1-${record.id}`} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+src/pages/admin/Dashboard.tsx:                            <tr key={`record-list-2-${record.id}`} className="border-b border-slate-100 last:border-0 hover:bg-slate-50 transition-colors">
+src/pages/admin/Dashboard.tsx:                    {BLOOD_GROUPS.map(bg => <option key={`emergency-${bg}`} value={bg}>{bg}</option>)}
+src/pages/admin/Dashboard.tsx:                    {BLOOD_GROUPS.map(bg => <option key={`campaign-${bg}`} value={bg}>{bg}</option>)}
+src/pages/admin/Dashboard.tsx:                    {VIETNAM_PROVINCES.map(p => <option key={`campaign-region-${p}`} value={p}>{p}</option>)}
+src/pages/Register.tsx:      key="register"
+src/pages/EventDetails.tsx:                        <tr key={record.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+src/pages/EventDetails.tsx:                        key={star}
+src/pages/EventDetails.tsx:                      <div key={review.id} className="p-4 border border-slate-100 rounded-xl bg-white shadow-sm">
+src/pages/EventDetails.tsx:                              <Star key={star} className={`w-4 h-4 ${star <= review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-slate-200'}`} />
+src/pages/EventDetails.tsx:                        key="failed"
+src/pages/EventDetails.tsx:                        key="review"
+src/pages/EventDetails.tsx:                            <div key={q.id} className="flex items-start justify-between p-3 rounded-lg border border-slate-100 bg-slate-50/50">
+src/pages/EventDetails.tsx:                                key={item.amount}
+src/pages/EventDetails.tsx:                        key={currentStep}
+src/pages/EventDetails.tsx:                              key={amt}
+src/pages/CreateEvent.tsx:                  <option key={province} value={province}>{province}</option>
+src/pages/CreateEvent.tsx:                  <option key={loc.id} value={loc.id}>{loc.name}</option>
+src/pages/CreateEvent.tsx:                  <label key={bg} className="flex items-center gap-2 cursor-pointer bg-slate-50 px-3 py-2 rounded-lg border border-slate-200 hover:bg-slate-100 transition-colors">
+src/pages/CreateEvent.tsx:                    <div key={item.id} className="flex items-start gap-3">
+src/pages/Login.tsx:      key="login"
+src/pages/Leaderboard.tsx:                      key={group}
+src/pages/Leaderboard.tsx:                      <tr key={donor.id} className="hover:bg-slate-50/50 transition-colors group">
+src/pages/Certificate.tsx:              <option key={year} value={year}>Năm {year}</option>
+src/pages/Certificate.tsx:              <option key={event.id} value={event.id}>{event.title}</option>
+src/pages/Certificate.tsx:              <Card key={record.id} className={`overflow-hidden shadow-sm hover:shadow-md transition-all border-t-4 ${theme.border} group`}>
+src/pages/Certificate.tsx:                <option key={year} value={year}>Năm {year}</option>
+src/pages/Certificate.tsx:                <option key={event.id} value={event.id}>{event.title}</option>
+src/pages/Certificate.tsx:                <Card key={record.id} className={`overflow-hidden shadow-sm hover:shadow-md transition-all border-t-4 ${theme.border} group`}>
+src/pages/Certificate.tsx:                    <div key={record.id} className="relative pl-6 border-l-2 border-slate-200">
+src/pages/UserProfile.tsx:                            <span key={bg} className="px-3 py-1.5 bg-slate-50 text-slate-700 text-sm font-semibold rounded-lg border border-slate-200">
+src/pages/UserProfile.tsx:                            <span key={bg} className="px-3 py-1.5 bg-slate-50 text-slate-700 text-sm font-semibold rounded-lg border border-slate-200">
+src/pages/UserProfile.tsx:                                    <Cell key={`cell-profile-blood-${index}`} fill={entry.color} />
+src/pages/UserProfile.tsx:                            <div key={record.id} className={`p-6 flex flex-col sm:flex-row sm:items-center gap-5 hover:bg-slate-50 transition-colors ${index !== myRecords.length - 1 ? 'border-b border-slate-100' : ''}`}>
+src/pages/UserProfile.tsx:                            <Card key={badge.id} className={`rounded-3xl border-slate-100 overflow-hidden transition-all duration-300 ${isEarned ? 'bg-white shadow-md hover:-translate-y-1' : 'bg-slate-50/50 shadow-sm'}`}>
+src/pages/UserProfile.tsx:                              <Card key={cert.id} className="rounded-3xl shadow-sm border-slate-100 hover:shadow-md transition-all overflow-hidden group">
+src/pages/LocationsMap.tsx:                    key={loc.id} 
+src/pages/LocationsMap.tsx:                                <div key={evt.id} className="bg-white p-3 rounded-lg border border-slate-100 text-sm flex flex-col gap-2">
+src/pages/LocationsMap.tsx:                  key={loc.id} 
+src/pages/LocationsMap.tsx:                                <div key={evt.id} className="text-[11px] bg-slate-50 p-1.5 rounded border border-slate-100 flex justify-between items-center">
+src/pages/LocationsMap.tsx:                      <div key={evt.id} className="bg-slate-50 p-3 rounded-lg border border-slate-100 flex flex-col justify-between">
+src/pages/Guide.tsx:              key={item.step}
+src/pages/Guide.tsx:                  <div key={tip.title} className="flex gap-4 p-4 rounded-2xl bg-white border border-slate-100">
+src/pages/Guide.tsx:                  <div key={tip.title} className="flex gap-4 p-4 rounded-2xl bg-white border border-slate-100">
+src/pages/Community.tsx:                key={i}
+src/pages/Community.tsx:                      key={post.id}
+src/pages/Community.tsx:                                <div key={comment.id} className="flex gap-3">
+src/pages/Community.tsx:                    <div key={call.id} className="p-4 rounded-xl bg-white border border-red-100 shadow-sm space-y-3">
+src/pages/Community.tsx:                    <div key={event.id} className="group cursor-pointer">
+src/pages/Community.tsx:                    <div key={i} className="flex items-center justify-between">
+src/pages/AdminRankingPage.tsx:                  {bloodGroupData.map((entry, index) => <Cell key={`cell-ranking-blood-${index}`} fill={COLORS[index % COLORS.length]} />)}
+src/pages/AdminRankingPage.tsx:                  key={donor.id} 
+src/pages/AdminRankingPage.tsx:                    {donor.badges.map((b, index) => <Badge key={`badge-${donor.id}-${b}-${index}`} variant="secondary" className="bg-amber-100 text-amber-800">{b}</Badge>)}
+src/pages/Events.tsx:                  <option key={loc.id} value={loc.id}>{loc.name}</option>
+src/pages/Events.tsx:                        <option key={bg} value={bg}>{bg}</option>
+src/pages/Events.tsx:                  key={event.id}
+src/pages/Events.tsx:                    key={event.id} 
+src/pages/Events.tsx:                  <div key={day} className="py-3 text-center text-xs font-bold text-slate-400 uppercase tracking-wider bg-slate-50/30">
+src/pages/Events.tsx:                        key={day.toISOString()} 
+src/pages/Events.tsx:                              key={event.id}
+src/pages/Events.tsx:                    <div key={day.toISOString()} className={`py-4 text-center border-r border-slate-100 last:border-r-0 ${isToday(day) ? 'bg-red-50/30' : ''}`}>
+src/pages/Events.tsx:                      <div key={day.toISOString()} className={`p-3 border-r border-slate-100 last:border-r-0 space-y-3 ${isToday(day) ? 'bg-red-50/10' : ''}`}>
+src/pages/Events.tsx:                            key={event.id} 
+src/pages/Events.tsx:                        <div key={event.id} className="w-full max-w-2xl">
+src/pages/AboutUs.tsx:              <div key={stat.label} className="text-center">
+src/pages/AboutUs.tsx:                <div key={item.title} className="p-6 rounded-2xl bg-white border border-slate-100 shadow-sm">
+src/pages/AboutUs.tsx:                <li key={item} className="flex items-start gap-3 text-slate-700 font-medium">
+src/pages/AboutUs.tsx:              <div key={value.title} className="space-y-4">
+src/pages/History.tsx:              <option key={year} value={year}>Năm {year}</option>
+src/pages/History.tsx:              <option key={loc} value={loc}>{loc}</option>
+src/pages/History.tsx:                key={record.id}
+src/pages/Home.tsx:                  key={post.id} 
+src/pages/Home.tsx:                  key={post.id} 
+src/pages/AdminDashboard.tsx:                      <Cell key={`cell-admin-dashboard-blood-${index}`} fill={COLORS[index % COLORS.length]} />
+src/pages/AdminDashboard.tsx:                  <div key={entry.name} className="flex items-center gap-2">
+src/pages/AdminDashboard.tsx:                  <tr key={event.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors">
+src/pages/AdminDashboard.tsx:                    key={page}
+src/pages/UserDashboard.tsx:                <Card key={record.id} className="border-l-4 border-l-blue-500 shadow-sm overflow-hidden">
+src/pages/UserDashboard.tsx:                key={event.id}
+src/pages/UserDashboard.tsx:                    <div key={user.id} className="flex items-center gap-3 p-4 hover:bg-slate-50 transition-colors group">
+src/pages/UserDashboard.tsx:                key={story.id} 
+src/pages/PublicEvents.tsx:                  key={item.id}
+src/pages/PublicEvents.tsx:                        <option key={loc} value={loc}>{loc}</option>
+src/pages/PublicEvents.tsx:                        <option key={bg} value={bg}>{bg}</option>
+src/pages/PublicEvents.tsx:                key={event.id}
+src/pages/PublicEvents.tsx:                            <Badge key={`${bg}-${index}`} className="bg-white/90 text-red-600 border-none text-[10px] px-1.5 h-5 backdrop-blur-sm">
+src/pages/PublicEvents.tsx:                            <Badge key={`${bg}-${index}`} variant="secondary" className="bg-red-50 text-red-600 border-red-100">

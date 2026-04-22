@@ -1,0 +1,5 @@
+{
+  "name": "Máu+ - Hệ thống Quản lý Hiến máu",
+  "description": "Ứng dụng quản lý hiến máu nhân đạo, kết nối người hiến và các sự kiện hiến máu.",
+  "requestFramePermissions": ["clipboard-read", "clipboard-write"]
+}
