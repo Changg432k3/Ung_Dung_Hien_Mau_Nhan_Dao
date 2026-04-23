@@ -178,8 +178,7 @@ export const Events: React.FC = () => {
         </div>
       </div>
 
-      {/* Featured Event */}
-      <FeaturedEventCard />
+      {viewMode === 'grid' && <FeaturedEventCard />}
 
       {/* Filters */}
       <Card className="shadow-sm border-slate-200/60 overflow-hidden">

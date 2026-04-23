@@ -43,6 +43,7 @@ import { Register } from './pages/Register';
 import { PublicLayout } from './components/PublicLayout';
 import { useApp } from './store/AppContext';
 import { Toaster } from 'sonner';
+import ScrollToTop from './components/ScrollToTop';
 
 import { CreateEvent } from './pages/CreateEvent';
 
@@ -96,6 +97,7 @@ export default function App() {
   return (
     <AppProvider>
       <BrowserRouter>
+        <ScrollToTop />
         <Toaster position="top-right" richColors />
         <Routes>
           <Route element={<PublicLayout />}>

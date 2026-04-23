@@ -42,6 +42,12 @@ export const UserProfile: React.FC = () => {
   const { currentUser, records, badges, certificates, certificateTemplates, events, users, updateUser, markBadgeAsSeen } = useApp();
   const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
+  const [showAllBadges, setShowAllBadges] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [activeTab]);
+
   const [editForm, setEditForm] = useState({
     name: '',
     phone: '',
@@ -341,7 +347,7 @@ export const UserProfile: React.FC = () => {
                   <div className="flex items-center gap-4 mb-6">
                     <div className="bg-white p-2 rounded-xl shadow-inner">
                       <QRCodeSVG 
-                        value={`mau+:user:${currentUser.id}`} 
+                        value={`bloodlink:user:${currentUser.id}`} 
                         size={64} 
                         bgColor={"#ffffff"} 
                         fgColor={"#000000"} 
@@ -902,7 +908,9 @@ export const UserProfile: React.FC = () => {
                         Huy hiệu đạt được
                       </h3>
                       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                        {[...badges].sort((a, b) => a.condition - b.condition).map((badge, index) => {
+                        {[...badges].sort((a, b) => a.condition - b.condition)
+                          .slice(0, showAllBadges ? badges.length : 3)
+                          .map((badge, index) => {
                           const isEarned = donationCount >= badge.condition;
                           const earnedRecord = currentUser.earnedBadges?.find(b => b.badgeId === badge.id);
                           const progress = Math.min(100, (donationCount / badge.condition) * 100);
@@ -910,7 +918,7 @@ export const UserProfile: React.FC = () => {
                           const IconComponent = ICON_MAP[badge.icon] || Award;
                           
                           return (
-                            <Card key={badge.id} className={`rounded-3xl border-slate-100 overflow-hidden transition-all duration-300 ${isEarned ? 'bg-white shadow-md hover:-translate-y-1' : 'bg-slate-50/50 shadow-sm'}`}>
+                            <Card key={`${badge.id}-${index}`} className={`rounded-3xl border-slate-100 overflow-hidden transition-all duration-300 ${isEarned ? 'bg-white shadow-md hover:-translate-y-1' : 'bg-slate-50/50 shadow-sm'}`}>
                               <CardContent className="p-8 flex flex-col items-center text-center">
                                 <div className={`relative mb-6 ${isEarned ? '' : 'grayscale opacity-30'}`}>
                                   <div className={`w-24 h-24 rounded-full flex items-center justify-center shadow-inner bg-gradient-to-br ${levelData.gradientClass}`}>
@@ -964,6 +972,13 @@ export const UserProfile: React.FC = () => {
                           );
                         })}
                       </div>
+                      {badges.length > 3 && (
+                        <div className="flex justify-center mt-6">
+                            <Button variant="outline" onClick={() => setShowAllBadges(!showAllBadges)} className="rounded-full px-6">
+                                {showAllBadges ? 'Thu gọn' : 'Xem thêm'}
+                            </Button>
+                        </div>
+                      )}
                     </div>
 
                     {/* Certificates Section */}
