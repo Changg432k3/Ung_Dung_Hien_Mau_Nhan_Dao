@@ -61,6 +61,7 @@ Trong bối cảnh nhu cầu máu ngày càng tăng, việc xây dựng một n�
   <img width="1860" height="864" alt="image" src="https://github.com/user-attachments/assets/b029420f-9b1e-4378-ab24-4c2a96347158" />
 - Quản lý sự kiện
   <img width="1529" height="784" alt="image" src="https://github.com/user-attachments/assets/ef54cfaa-ef27-4dec-a001-4b7b8f9278bc" />
+  <img width="1536" height="800" alt="image" src="https://github.com/user-attachments/assets/3b4ac364-8115-40a9-92a5-131936cac67f" />
 - Quản lý chứng nhận
 <img width="1505" height="789" alt="image" src="https://github.com/user-attachments/assets/a66a7591-0461-404c-a73a-6060d43872d6" />
 
