@@ -122,6 +122,7 @@ interface Location {
   contactInfo?: string;
   type: 'hospital' | 'center' | 'mobile';
   imageUrl?: string;
+  status?: 'active' | 'inactive';
 }
 
 interface FirebaseEvent {
@@ -155,7 +156,8 @@ export const LocationsMap: React.FC = () => {
     const unsubLocs = onSnapshot(query(collection(db, 'locations'), orderBy('name', 'asc')), (snapshot) => {
       const locs: Location[] = [];
       snapshot.forEach((doc) => {
-        locs.push({ id: doc.id, ...doc.data() } as Location);
+        const data = doc.data() as any;
+        locs.push({ id: doc.id, ...data, status: data.status || 'active' } as Location);
       });
       setLocations(locs);
       setIsLoading(false);
@@ -180,7 +182,8 @@ export const LocationsMap: React.FC = () => {
       const matchesSearch = loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                            loc.address.toLowerCase().includes(searchQuery.toLowerCase());
       const matchesType = selectedType === 'all' || loc.type === selectedType;
-      return matchesSearch && matchesType;
+      const matchesStatus = (loc.status ?? 'active') === 'active';
+      return matchesSearch && matchesType && matchesStatus;
     });
   }, [locations, searchQuery, selectedType]);
 

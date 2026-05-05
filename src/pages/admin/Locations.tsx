@@ -1,10 +1,62 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot, query, orderBy } from 'firebase/firestore';
 import { db, auth } from '../../lib/firebase';
-import { MapPin, Plus, Edit, Trash2, Search, X, Filter, Navigation } from 'lucide-react';
+import { MapPin, Plus, Edit, Trash2, Search, X, Filter, Navigation, CheckCircle2 } from 'lucide-react';
 import { VIETNAM_PROVINCES } from '../../constants/provinces';
 import { Button } from '../../components/ui/Button';
 import { toast } from 'sonner';
+
+const LocationImage: React.FC<{ imageUrl?: string; alt: string; type?: string }> = ({ imageUrl, alt, type = 'hospital' }) => {
+  const [hasError, setHasError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Generate a gradient background based on location type
+  const getGradient = () => {
+    switch (type) {
+      case 'hospital':
+        return 'bg-gradient-to-br from-red-100 to-rose-200';
+      case 'center':
+        return 'bg-gradient-to-br from-emerald-100 to-teal-200';
+      case 'mobile':
+        return 'bg-gradient-to-br from-amber-100 to-orange-200';
+      default:
+        return 'bg-gradient-to-br from-slate-100 to-slate-200';
+    }
+  };
+
+  const getIcon = () => {
+    switch (type) {
+      case 'hospital':
+        return '🏥';
+      case 'center':
+        return '🩸';
+      case 'mobile':
+        return '🚐';
+      default:
+        return '📍';
+    }
+  };
+
+  if (!imageUrl || hasError) {
+    return (
+      <div className={`w-full h-full flex flex-col items-center justify-center ${getGradient()}`}>
+        <span className="text-5xl mb-2">{getIcon()}</span>
+        <p className="text-xs text-slate-500 font-medium">{alt}</p>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={imageUrl}
+      alt={alt}
+      className="w-full h-full object-cover"
+      loading="lazy"
+      onLoad={() => setIsLoading(false)}
+      onError={() => setHasError(true)}
+    />
+  );
+};
 
 // Add Google Maps types
 declare global {
@@ -74,6 +126,7 @@ export interface Location {
   contactInfo?: string;
   type: 'hospital' | 'center' | 'mobile';
   imageUrl?: string;
+  status: 'active' | 'inactive';
   createdAt: string;
 }
 
@@ -85,6 +138,7 @@ export const AdminLocations: React.FC = () => {
   const [editingLocation, setEditingLocation] = useState<Location | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState<string>('all');
+  const [locationStatusFilter, setLocationStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
   const [isLoading, setIsLoading] = useState(true);
   const addressInputRef = useRef<HTMLInputElement>(null);
 
@@ -143,7 +197,8 @@ export const AdminLocations: React.FC = () => {
     lng: 106.660172,
     contactInfo: '',
     type: 'hospital',
-    imageUrl: ''
+    imageUrl: '',
+    status: 'active'
   });
 
   useEffect(() => {
@@ -168,7 +223,8 @@ export const AdminLocations: React.FC = () => {
     const matchesSearch = loc.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
                           loc.address.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesType = filterType === 'all' || loc.type === filterType;
-    return matchesSearch && matchesType;
+    const matchesStatus = locationStatusFilter === 'all' || loc.status === locationStatusFilter;
+    return matchesSearch && matchesType && matchesStatus;
   });
 
   const handleOpenModal = (location?: Location) => {
@@ -225,7 +281,8 @@ export const AdminLocations: React.FC = () => {
         const docRef = doc(db, 'locations', editingLocation.id);
         const updatedData = {
           ...formData,
-          region: foundRegion || formData.region || ''
+          region: foundRegion || formData.region || '',
+          status: formData.status || 'active'
         };
         await updateDoc(docRef, updatedData);
         
@@ -237,6 +294,7 @@ export const AdminLocations: React.FC = () => {
         await addDoc(collection(db, 'locations'), {
           ...formData,
           region: foundRegion || formData.region || '',
+          status: formData.status || 'active',
           createdAt: new Date().toISOString()
         });
         toast.success("Thêm điểm hiến máu thành công!");
@@ -254,6 +312,19 @@ export const AdminLocations: React.FC = () => {
   const handleDeleteClick = (id: string) => {
     setDeletingId(id);
     setIsConfirmDeleteOpen(true);
+  };
+
+  const handleToggleStatus = async (location: Location) => {
+    try {
+      const newStatus = location.status === 'active' ? 'inactive' : 'active';
+      const docRef = doc(db, 'locations', location.id);
+      await updateDoc(docRef, { status: newStatus });
+      setLocations(prev => prev.map(loc => loc.id === location.id ? { ...loc, status: newStatus } : loc));
+      toast.success(`Đã ${newStatus === 'active' ? 'kích hoạt' : 'ẩn'} điểm hiến máu ${location.name}`);
+    } catch (error) {
+      toast.error('Có lỗi xảy ra khi cập nhật trạng thái.');
+      handleFirestoreError(error, OperationType.UPDATE, 'locations');
+    }
   };
 
   const confirmDelete = async () => {
@@ -306,6 +377,15 @@ export const AdminLocations: React.FC = () => {
             <option value="center">Trung tâm</option>
             <option value="mobile">Lưu động</option>
           </select>
+          <select
+            className="flex-1 py-2 px-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500 bg-white"
+            value={locationStatusFilter}
+            onChange={(e) => setLocationStatusFilter(e.target.value as any)}
+          >
+            <option value="all">Tất cả trạng thái</option>
+            <option value="active">Đang hoạt động</option>
+            <option value="inactive">Đã ẩn / Không hoạt động</option>
+          </select>
         </div>
       </div>
 
@@ -315,14 +395,8 @@ export const AdminLocations: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredLocations.map((loc) => (
             <div key={loc.id} className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-              <div className="h-40 relative bg-slate-100">
-                {loc.imageUrl ? (
-                  <img src={loc.imageUrl || undefined} alt={loc.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center text-slate-400">
-                    <MapPin className="w-10 h-10" />
-                  </div>
-                )}
+              <div className="h-40 relative bg-slate-100 overflow-hidden">
+                <LocationImage imageUrl={loc.imageUrl} alt={loc.name} type={loc.type} />
                 <div className="absolute top-3 right-3">
                   <span className="px-2.5 py-1 rounded-full text-xs font-medium bg-white/90 text-slate-700 shadow-sm capitalize">
                     {loc.type === 'hospital' ? 'Bệnh viện' : loc.type === 'center' ? 'Trung tâm' : 'Lưu động'}
@@ -352,21 +426,34 @@ export const AdminLocations: React.FC = () => {
                   </a>
                 </div>
               </div>
-              <div className="p-4 border-t border-slate-100 flex items-center justify-end gap-2 bg-slate-50">
-                <button 
-                  onClick={() => handleOpenModal(loc)}
-                  className="p-1.5 text-slate-400 hover:text-blue-600 transition-colors"
-                  title="Sửa"
-                >
-                  <Edit className="w-4 h-4" />
-                </button>
-                <button 
-                  onClick={() => handleDeleteClick(loc.id)}
-                  className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
-                  title="Xóa"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="p-4 border-t border-slate-100 flex items-center justify-between gap-2 bg-slate-50">
+                <span className={`px-2 py-1 rounded-full text-xs font-semibold ${loc.status === 'active' ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-200 text-slate-600'}`}>
+                  {loc.status === 'active' ? 'Hoạt động' : 'Ẩn / Không hoạt động'}
+                </span>
+                <div className="flex items-center gap-2">
+                  <button 
+                    onClick={() => handleToggleStatus(loc)}
+                    className={`p-1.5 ${loc.status === 'active' ? 'text-slate-400 hover:text-orange-600' : 'text-slate-400 hover:text-emerald-600'} transition-colors`}
+                    title={loc.status === 'active' ? 'Ẩn địa điểm' : 'Hiển thị địa điểm'}
+                  >
+                    <span className="sr-only">{loc.status === 'active' ? 'Ẩn' : 'Hiện'}</span>
+                    <CheckCircle2 className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleOpenModal(loc)}
+                    className="p-1.5 text-slate-400 hover:text-blue-600 transition-colors"
+                    title="Sửa"
+                  >
+                    <Edit className="w-4 h-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDeleteClick(loc.id)}
+                    className="p-1.5 text-slate-400 hover:text-red-600 transition-colors"
+                    title="Xóa"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
             </div>
           ))}
@@ -486,6 +573,17 @@ export const AdminLocations: React.FC = () => {
                     value={formData.imageUrl || ''}
                     onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
                   />
+                </div>
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700 mb-1">Trạng thái</label>
+                  <select
+                    className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-red-500 bg-white"
+                    value={formData.status || 'active'}
+                    onChange={(e) => setFormData({ ...formData, status: e.target.value as 'active' | 'inactive' })}
+                  >
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Ẩn / Không hoạt động</option>
+                  </select>
                 </div>
               </div>
 

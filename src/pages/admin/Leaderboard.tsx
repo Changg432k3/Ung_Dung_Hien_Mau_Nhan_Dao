@@ -23,7 +23,14 @@ export const AdminLeaderboard: React.FC = () => {
   }, [records]);
 
   const donors = useMemo(() => {
-    let filtered = users.filter(u => u.role === 'donor');
+    const filtered = users
+      .filter(u => u.role === 'donor')
+      .filter(u => {
+        if (activeTab === 'donations') return u.donationsCount > 0;
+        if (activeTab === 'community') return (u.points || 0) > 0;
+        if (activeTab === 'events') return (eventParticipation[u.id] || 0) > 0;
+        return true;
+      });
 
     if (activeTab === 'donations') {
       filtered.sort((a, b) => b.donationsCount - a.donationsCount);

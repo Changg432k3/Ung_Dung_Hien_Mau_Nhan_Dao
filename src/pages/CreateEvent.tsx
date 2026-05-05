@@ -235,7 +235,7 @@ export const CreateEvent: React.FC = () => {
                 required
               >
                 <option value="">-- Chọn điểm hiến máu --</option>
-                {locations.filter(l => !formData.region || l.address.includes(formData.region)).map(loc => (
+                {locations.filter(l => (l.status ?? 'active') === 'active' && (!formData.region || l.address.includes(formData.region))).map(loc => (
                   <option key={loc.id} value={loc.id}>{loc.name}</option>
                 ))}
               </select>

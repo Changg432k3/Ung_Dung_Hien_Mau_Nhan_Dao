@@ -223,7 +223,7 @@ export const AdminParticipants: React.FC = () => {
     }
   }, [isQRModalOpen, qrScanResult]);
 
-  function onScanSuccess(decodedText: string) {
+  async function onScanSuccess(decodedText: string) {
     setScanError(null);
     // The QR code should contain the recordId or a specific format
     let recordId = decodedText;
@@ -290,30 +290,27 @@ export const AdminParticipants: React.FC = () => {
       return;
     }
 
-    if (participant.status === 'checked-in') {
-      toast.info(`${participant.name} đã check-in trước đó.`);
-      setQrScanResult(participant);
-      return;
-    }
-
     if (participant.status === 'completed') {
       toast.info(`${participant.name} đã hoàn thành hiến máu.`);
       setQrScanResult(participant);
       return;
     }
 
-    // Valid check-in
+    // Valid QR confirmation for hiến máu
     setIsProcessing(true);
-    setTimeout(() => {
-      handleCheckIn(participant.id);
-      setQrScanResult(participant);
+    try {
+      await completeDonation(participant.id, 350, participant.bloodGroup as BloodGroup);
+      setQrScanResult({ ...participant, status: 'completed' });
+      toast.success(`Đã xác nhận hiến máu cho ${participant.name}`);
+    } catch (error) {
+      console.error(error);
+      toast.error('Xác nhận hiến máu thất bại. Vui lòng thử lại.');
+    } finally {
       setIsProcessing(false);
-      
-      // Stop scanner after success
       if (scannerRef.current) {
         scannerRef.current.clear().catch(console.error);
       }
-    }, 1000);
+    }
   }
 
   function onScanFailure(error: any) {
@@ -343,7 +340,7 @@ export const AdminParticipants: React.FC = () => {
           </Button>
           <Button onClick={() => setIsQRModalOpen(true)} className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white">
             <QrCode className="w-4 h-4" />
-            Quét QR Check-in
+            Quét QR Hiến máu
           </Button>
         </div>
       </div>
@@ -385,7 +382,7 @@ export const AdminParticipants: React.FC = () => {
             <option value="">Tất cả trạng thái</option>
             <option value="registered">Chưa đến</option>
             <option value="checked-in">Đã check-in</option>
-            <option value="donated">Đã hiến tặng</option>
+            <option value="completed">Đã hiến tặng</option>
           </select>
         </div>
       </div>
@@ -490,7 +487,7 @@ export const AdminParticipants: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/50 p-4">
           <div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden flex flex-col max-h-[90vh]">
             <div className="flex items-center justify-between p-4 border-b border-slate-200 shrink-0">
-              <h3 className="font-bold text-lg">Quét mã QR Check-in</h3>
+              <h3 className="font-bold text-lg">Quét mã QR Hiến máu</h3>
               <button onClick={() => {
                 setIsQRModalOpen(false);
                 setQrScanResult(null);
@@ -505,7 +502,7 @@ export const AdminParticipants: React.FC = () => {
                     <CheckCircle2 className="w-10 h-10" />
                   </div>
                   <div>
-                    <h4 className="text-xl font-bold text-slate-900">Check-in thành công!</h4>
+                    <h4 className="text-xl font-bold text-slate-900">Xác nhận hiến máu thành công!</h4>
                     <p className="text-slate-500 mt-1">Thông tin người hiến máu:</p>
                   </div>
                   
@@ -524,7 +521,7 @@ export const AdminParticipants: React.FC = () => {
                     </div>
                     <div className="flex justify-between items-center">
                       <span className="text-slate-500 text-sm">Trạng thái:</span>
-                      <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Đã check-in</Badge>
+                      <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200">Đã hiến tặng</Badge>
                     </div>
                   </div>
 

@@ -381,6 +381,7 @@ export interface Location {
   contactInfo?: string;
   type: 'hospital' | 'center' | 'mobile';
   imageUrl?: string;
+  status: 'active' | 'inactive';
   createdAt: string;
 }
 
@@ -1465,7 +1466,12 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const locs: Location[] = [];
       snapshot.forEach((doc) => {
-        locs.push({ id: doc.id, ...doc.data() } as Location);
+        const data = doc.data() as any;
+        locs.push({
+          id: doc.id,
+          ...data,
+          status: data.status || 'active'
+        } as Location);
       });
       setLocations(locs);
     }, (error) => {
@@ -2432,6 +2438,20 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       points: randomPrize.points
     };
   };
+
+  // Auto-issue certificates when registration status becomes 'completed'
+  useEffect(() => {
+    const completedRecords = records.filter(r => r.status === 'completed');
+    completedRecords.forEach(record => {
+      const hasCert = certificates.some(c => c.recordId === record.id);
+      if (!hasCert && certificateTemplates.length > 0) {
+        // Delay to ensure Firestore is synced
+        setTimeout(() => {
+          issueCertificate(record.userId, record.eventId, record.id).catch(console.error);
+        }, 300);
+      }
+    });
+  }, [records, certificates, certificateTemplates]);
 
   return (
     <AppContext.Provider value={{

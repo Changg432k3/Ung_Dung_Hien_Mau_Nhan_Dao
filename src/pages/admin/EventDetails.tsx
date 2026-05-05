@@ -450,7 +450,7 @@ export const AdminEventDetails: React.FC = () => {
                             }}
                           >
                             <option value="">-- Chọn điểm hiến máu --</option>
-                            {locations.filter(l => !formData.region || l.address.includes(formData.region)).map(loc => (
+                            {locations.filter(l => ((l.status ?? 'active') === 'active' || l.id === formData.locationId) && (!formData.region || l.address.includes(formData.region) || l.id === formData.locationId)).map(loc => (
                               <option key={loc.id} value={loc.id}>{loc.name}</option>
                             ))}
                           </select>

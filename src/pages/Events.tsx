@@ -211,7 +211,7 @@ export const Events: React.FC = () => {
                 onChange={(e) => setFilterLocation(e.target.value)}
               >
                 <option value="all">Tất cả điểm hiến máu</option>
-                {locations.map(loc => (
+                {locations.filter(loc => (loc.status ?? 'active') === 'active').map(loc => (
                   <option key={loc.id} value={loc.id}>{loc.name}</option>
                 ))}
               </select>
